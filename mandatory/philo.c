@@ -46,7 +46,6 @@ void ft_error(char *err)
     exit(EXIT_FAILURE);
 }
 // philoNumbers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
-
 void is_argument_has_number(char *str)
 {
     int i;
@@ -61,7 +60,7 @@ void is_argument_has_number(char *str)
     ft_error("An arguments not numeric");
 }
 
-size_t is_valid_numbers(char *str)
+long is_valid_numbers(char *str)
 {
     long    p_nb;
 
@@ -77,13 +76,11 @@ size_t is_valid_numbers(char *str)
         ft_error("Arguments number is more that int max");
     if (p_nb < 0)
         ft_error("All number must be posivite");
-    return ((size_t)p_nb);
+    return (p_nb);
 }
 
-void content_init(t_container *content, char **av)
+void parse_content(t_container *content, char **av)
 {
-    (void)content;
-    (void)av;
     content->number_of_philos = is_valid_numbers(av[1]);
     content->time_to_die = is_valid_numbers(av[2]);
     content->time_to_eat = is_valid_numbers(av[3]);
@@ -91,19 +88,42 @@ void content_init(t_container *content, char **av)
     if (av[5])
         content->number_of_meals = (int)is_valid_numbers(av[5]);
     else
-        content->number_of_meals = -1;
+        content->number_of_meals = INT_MIN;
+}
+
+
+void create_philos(t_container *content)
+{
+    int         i;
+
+    i = 0;
+    if (!content)
+        return ;
+    content->all_philos = malloc(sizeof(t_philo) * content->number_of_philos);
+    if (!content->all_philos)
+        ft_error("Error create philosopher");
+    content->all_forks = malloc(sizeof(t_fork) * content->number_of_philos);
+    if (!content->all_forks)
+        ft_error("Error create forks");
+    while (i < content->number_of_philos)
+    {
+        content->all_forks[i].id = i;
+        content->all_forks[i].meals = 0;
+        content->all_forks[i].;
+        i++;
+    }
+
 }
 
 void argument_parsing(t_container *content, char **av)
 {
-    
-    content_init(content, av);
+    parse_content(content, av);
+    philo_init(content);
     // is_argument_numbers();
 }
 
 int main(int ac, char **av)
 {
-    (void)av;
     t_container content;
 
     if (ac < 5 || ac > 6)
@@ -114,7 +134,7 @@ int main(int ac, char **av)
     printf("%zu\n", content.time_to_die);
     printf("%zu\n", content.time_to_eat);
     printf("%zu\n", content.time_to_sleep);
-    
+
     // data_initialzing();
     return (0);
 }
