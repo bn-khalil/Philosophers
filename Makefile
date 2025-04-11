@@ -8,6 +8,7 @@ SRC = $(MANDATORY_DIR)philo.c \
 	  $(MANDATORY_DIR)philo_parsing.c \
 	  $(MANDATORY_DIR)philo_utils.c \
 	  $(MANDATORY_DIR)philo_initial.c \
+	  $(MANDATORY_DIR)philo_exec.c \
 
 OBJS = $(SRC:.c=.o)
 CFLAGS =  -Wall -Wextra -Werror -fsanitize=address

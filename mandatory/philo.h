@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/11 12:25:53 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:50:42 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <limits.h>
+# include <sys/time.h>
 
 typedef struct      s_fork
 {
@@ -25,7 +26,6 @@ typedef struct      s_fork
     pthread_mutex_t fork;
     struct          s_fork *next;
 }                   t_fork;
-
 
 typedef struct      s_philo
 {
@@ -62,6 +62,7 @@ t_fork *ft_lstnew_fork(int philo_number);
 void	ft_lstadd_back_philo(t_philo **lst, t_philo *new);
 void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
 void assign_forks_to_philo(t_container *content);
+void start_actions(t_container *content);
 
 
 #endif
