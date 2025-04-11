@@ -3,7 +3,11 @@ NAME = philo
 
 MANDATORY_DIR = mandatory/
 HEADER = $(MANDATORY_DIR)philo.h
-SRC = $(MANDATORY_DIR)philo.c
+SRC = $(MANDATORY_DIR)philo.c \
+	  $(MANDATORY_DIR)philo_creates.c \
+	  $(MANDATORY_DIR)philo_parsing.c \
+	  $(MANDATORY_DIR)philo_utils.c \
+	  $(MANDATORY_DIR)philo_initial.c \
 
 OBJS = $(SRC:.c=.o)
 CFLAGS =  -Wall -Wextra -Werror -fsanitize=address
