@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/12 10:42:19 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/12 13:08:31 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@ typedef struct      s_fork
     struct          s_fork *next;
 }                   t_fork;
 
+typedef enum status
+{
+    P_THINK,
+    P_EAT,
+    P_SLEEP,
+    P_DIE
+} p_status;
+
+
 typedef struct      s_container
 {
     struct   s_philo         *all_philos;
@@ -46,6 +55,7 @@ typedef struct      s_philo
     t_fork          *left_fork;
     t_fork          *right_fork;
     int             meals;
+    p_status        status;
     t_container     *content;
     struct          s_philo *next;
 }                   t_philo;
@@ -65,6 +75,7 @@ void	ft_lstadd_back_philo(t_philo **lst, t_philo *new);
 void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
 void assign_forks_to_philo(t_container *content);
 void start_actions(t_container *content);
+long get_time();
 
 
 #endif

@@ -50,5 +50,5 @@ void parse_content(t_container *content, char **av)
     if (av[5])
         content->number_of_meals = (int)is_valid_numbers(av[5]);
     else
-        content->number_of_meals = INT_MIN;
+        content->number_of_meals = -1;
 }

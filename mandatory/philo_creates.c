@@ -13,6 +13,8 @@ t_philo *ft_lstnew_philo(int philo_number)
     head->left_fork = NULL;
     head->right_fork = NULL;
     head->thread = NULL;
+	head->status = P_THINK;
+	head->content = NULL;
 	return (head);
 }
 

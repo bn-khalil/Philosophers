@@ -11,7 +11,7 @@ SRC = $(MANDATORY_DIR)philo.c \
 	  $(MANDATORY_DIR)philo_exec.c \
 
 OBJS = $(SRC:.c=.o)
-CFLAGS =  -Wall -Wextra -Werror -fsanitize=address
+CFLAGS =  -Wall -Wextra -Werror -g #-fsanitize=address
 
 all: $(NAME)
 

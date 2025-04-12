@@ -1,12 +1,36 @@
 
 #include "philo.h"
 
+void check_for_deads(t_container *content)
+{
+    t_philo *philo;
+
+    while (1)
+    {
+        philo = content->all_philos;
+        while (philo)
+        {
+            if (get_time() - philo->time_last_meal > content->time_to_die)
+            {
+                // free all
+                philo->status = P_DIE;
+                printf("%ld %d died\n", get_time(), philo->id);
+                break ;
+            }
+            philo = philo->next;
+        }
+        if (philo->status == P_DIE)
+            break ;
+    }
+}
+
 void argument_parsing(t_container *content, char **av)
 {
     parse_content(content, av);
     create_philos(content);
     assign_forks_to_philo(content);
     start_actions(content);
+    check_for_deads(content);
     // while (content->all_philos)
     // {
     //     printf("philo(%d) , left (%d) right (%d)\n", content->all_philos->id, content->all_philos->left_fork->fork_id, content->all_philos->right_fork->fork_id);
