@@ -16,8 +16,26 @@ void *philo_actions(void *args)
     t_philo *philo;
 
     philo = (t_philo*)args;
-    // printf("philo -> (%d) (%ldsm)\n", philo->id, get_time());
-    printf("%ld %d is thinking\n", get_time(), philo->id);
+    if (philo->id % 2)
+        usleep(1000);
+    while (1)
+    {
+        pthread_mutex_lock(&philo->left_fork->fork);
+        printf("%ld %d has taken left fork\n", get_time(), philo->id);
+        pthread_mutex_lock(&philo->right_fork->fork);
+        printf("%ld %d has taken right fork\n", get_time(), philo->id);
+        philo->time_last_meal = get_time();
+
+        printf("%ld %d is eating\n", philo->time_last_meal, philo->id);
+        usleep(philo->content->time_to_eat * 1000);
+        philo->meals++;
+        pthread_mutex_unlock(&philo->left_fork->fork);
+        pthread_mutex_unlock(&philo->right_fork->fork);
+        
+        // printf("%ld %d is sleeping\n", get_time(), philo->id);
+        // usleep(philo->content->time_to_sleep * 1000);
+    }
+    
     return (NULL);
 }
 
@@ -25,6 +43,7 @@ void start_actions(t_container *content)
 {
     t_philo *philo;
     philo = content->all_philos;
+    philo->content = content;
     while (philo)
     {
         if (pthread_create(&philo->thread, NULL, &philo_actions, philo) != 0)

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/11 15:50:42 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/12 10:42:19 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,17 @@ typedef struct      s_fork
     struct          s_fork *next;
 }                   t_fork;
 
+typedef struct      s_container
+{
+    struct   s_philo         *all_philos;
+    t_fork          *all_forks;
+    int             number_of_meals;
+    long            number_of_philos;
+    long            time_to_eat;
+    long            time_to_die;
+    long            time_to_sleep;
+}                   t_container;
+
 typedef struct      s_philo
 {
     int             id;
@@ -35,19 +46,10 @@ typedef struct      s_philo
     t_fork          *left_fork;
     t_fork          *right_fork;
     int             meals;
+    t_container     *content;
     struct          s_philo *next;
 }                   t_philo;
 
-typedef struct      s_container
-{
-    t_philo         *all_philos;
-    t_fork          *all_forks;
-    int             number_of_meals;
-    long            number_of_philos;
-    long            time_to_eat;
-    long            time_to_die;
-    long            time_to_sleep;
-}                   t_container;
 
 void ft_error(char *err);
 void is_argument_has_number(char *str);
