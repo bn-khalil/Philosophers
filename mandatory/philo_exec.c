@@ -23,18 +23,27 @@ void ft_sleep(long time)
 void *philo_actions(void *args)
 {
     t_philo *philo;
+    pthread_mutex_t *first_fork;
+    pthread_mutex_t *second_fork;
 
     philo = (t_philo*)args;
-    if (philo->id % 2 == 0)
-        usleep(1000);
     while (philo->status != P_DIE)
     {
         if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
             break ;
-
-        pthread_mutex_lock(&philo->left_fork->fork);
+        if (philo->left_fork->fork_id < philo->right_fork->fork_id)
+        {
+            first_fork = &philo->left_fork->fork;
+            second_fork = &philo->right_fork->fork;
+        }
+        else
+        {
+            first_fork = &philo->right_fork->fork;
+            second_fork = &philo->left_fork->fork;
+        }
+        pthread_mutex_lock(first_fork);
         printf("%ld %d has taken left fork\n", get_time(), philo->id);
-        pthread_mutex_lock(&philo->right_fork->fork);
+        pthread_mutex_lock(second_fork);
         printf("%ld %d has taken right fork\n", get_time(), philo->id);
 
         philo->status = P_EAT;
@@ -42,9 +51,9 @@ void *philo_actions(void *args)
         printf("%ld %d is eating\n", philo->time_last_meal, philo->id);
         ft_sleep(philo->content->time_to_eat);
         philo->meals++;
-        pthread_mutex_unlock(&philo->left_fork->fork);
-        pthread_mutex_unlock(&philo->right_fork->fork);
-    
+        pthread_mutex_unlock(first_fork);
+        pthread_mutex_unlock(second_fork);
+
         philo->status = P_SLEEP;
         printf("%ld %d is sleeping\n", get_time(), philo->id);
         ft_sleep(philo->content->time_to_sleep);
@@ -56,16 +65,23 @@ void *philo_actions(void *args)
     return (NULL);
 }
 
+
 void start_actions(t_container *content)
 {
     t_philo *philo;
     philo = content->all_philos;
+
+    if (philo->next == NULL)
+    {
+        printf("%ld %d has taken left fork\n", get_time(), philo->id);
+        return ;
+    }
     while (philo)
     {
         philo->content = content;
         if (pthread_create(&philo->thread, NULL, &philo_actions, philo) != 0)
         {
-            // free
+            // free and not exit
             ft_error("Error in threads!");
         }
         philo = philo->next;
@@ -75,7 +91,7 @@ void start_actions(t_container *content)
     {
         if (pthread_join(philo->thread, NULL) != 0)
         {
-            // free
+            // free and not exit
             ft_error("Error in join for threads!");
         }
         philo = philo->next;

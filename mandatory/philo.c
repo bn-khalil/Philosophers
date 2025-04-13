@@ -10,6 +10,8 @@ void check_for_deads(t_container *content)
         philo = content->all_philos;
         while (philo)
         {
+            if (philo->meals >= content->number_of_meals)
+                break ;
             if (get_time() - philo->time_last_meal > content->time_to_die)
             {
                 // free all
@@ -19,7 +21,7 @@ void check_for_deads(t_container *content)
             }
             philo = philo->next;
         }
-        if (philo->status == P_DIE)
+        if (philo->status == P_DIE || philo->meals >= content->number_of_meals)
             break ;
     }
 }
@@ -53,4 +55,4 @@ int main(int ac, char **av)
 
     // data_initialzing();
     return (0);
-}
+}   
