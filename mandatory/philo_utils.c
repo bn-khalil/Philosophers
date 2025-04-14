@@ -38,3 +38,36 @@ long	long_ft_atoi(const char *str)
 		store = store * 10 + (str[i++] - '0');
 	return (store * si);
 }
+
+void ft_free_philos(t_philo *philo)
+{
+    t_philo *current = philo;
+    t_philo *next;
+
+    while (current)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
+
+void ft_free_forks(t_fork *fork)
+{
+    t_fork *current = fork;
+    t_fork *next;
+
+    while (current)
+    {
+        next = current->next;
+		pthread_mutex_destroy(&current->fork);
+        free(current);
+        current = next;
+    }
+}
+
+void ft_free_all(t_container *content)
+{
+	ft_free_philos(content->all_philos);
+	ft_free_forks(content->all_forks);
+}

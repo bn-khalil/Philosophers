@@ -8,12 +8,12 @@ t_philo *ft_lstnew_philo(int philo_number)
 	if (!head)
 		return (NULL);
 	head->meals = 0;
-    head->id    = philo_number;
-	head->next  = NULL;
+	head->time_last_meal = 0;
+    head->id = philo_number;
+	head->next = NULL;
     head->left_fork = NULL;
     head->right_fork = NULL;
     head->thread = NULL;
-	head->status = P_THINK;
 	head->content = NULL;
 	return (head);
 }

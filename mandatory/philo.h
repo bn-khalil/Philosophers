@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/12 13:08:31 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:59:44 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,19 @@ typedef struct      s_fork
     struct          s_fork *next;
 }                   t_fork;
 
-typedef enum status
-{
-    P_THINK,
-    P_EAT,
-    P_SLEEP,
-    P_DIE
-} p_status;
-
 
 typedef struct      s_container
 {
     struct   s_philo         *all_philos;
     t_fork          *all_forks;
     int             number_of_meals;
+    int             is_die;
     long            number_of_philos;
     long            time_to_eat;
     long            time_to_die;
     long            time_to_sleep;
+    long            started_time;
+    pthread_t       thread_monitor;
 }                   t_container;
 
 typedef struct      s_philo
@@ -55,7 +50,6 @@ typedef struct      s_philo
     t_fork          *left_fork;
     t_fork          *right_fork;
     int             meals;
-    p_status        status;
     t_container     *content;
     struct          s_philo *next;
 }                   t_philo;
@@ -75,7 +69,9 @@ void	ft_lstadd_back_philo(t_philo **lst, t_philo *new);
 void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
 void assign_forks_to_philo(t_container *content);
 void start_actions(t_container *content);
-long get_time();
+long get_time(void);
+// void check_for_deads(t_container *content);
+void ft_free_all(t_container *content);
 
 
 #endif

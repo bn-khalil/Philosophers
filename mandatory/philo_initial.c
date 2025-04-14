@@ -33,4 +33,4 @@ void create_philos(t_container *content)
         ft_lstadd_back_fork(&content->all_forks, ft_lstnew_fork(i));
         i++;
     }
-}          
+}

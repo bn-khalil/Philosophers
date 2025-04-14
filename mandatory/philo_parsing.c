@@ -47,6 +47,7 @@ void parse_content(t_container *content, char **av)
     content->time_to_die = is_valid_numbers(av[2]);
     content->time_to_eat = is_valid_numbers(av[3]);
     content->time_to_sleep = is_valid_numbers(av[4]);
+    content->is_die = 0;
     if (av[5])
         content->number_of_meals = (int)is_valid_numbers(av[5]);
     else
