@@ -15,6 +15,12 @@ t_philo *ft_lstnew_philo(int philo_number)
     head->right_fork = NULL;
     head->thread = NULL;
 	head->content = NULL;
+	if (pthread_mutex_init(&head->last_meal, NULL) != 0 \
+	|| pthread_mutex_init(&head->p_meals, NULL) != 0)
+    {
+        // free all forks and philos
+        ft_error("Failed to init mutex");
+    }
 	return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/14 18:59:44 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:59:45 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
+    pthread_mutex_t dead;
     pthread_t       thread_monitor;
 }                   t_container;
 
@@ -47,6 +48,8 @@ typedef struct      s_philo
     int             id;
     pthread_t       thread;
     long            time_last_meal;
+    pthread_mutex_t last_meal;
+    pthread_mutex_t p_meals;
     t_fork          *left_fork;
     t_fork          *right_fork;
     int             meals;
