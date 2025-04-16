@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:00 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/15 23:00:10 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 12:48:17 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,16 @@ int check_and_print(t_philo *philo, char *message)
         pthread_mutex_unlock(&philo->content->dead);
         return (0);
     }
-    pthread_mutex_unlock(&philo->content->dead);
     pthread_mutex_lock(&philo->content->print);
     printf("%ld %d %s", get_time() - philo->content->started_time, philo->id, message);
     pthread_mutex_unlock(&philo->content->print);
+    pthread_mutex_unlock(&philo->content->dead);
     return (1);
 }
 
 void *philo_actions(void *data)
 {
     t_philo *philo = (t_philo*)data;
-    // t_fork *left_fork;
-    // t_fork *right_fork;
 
     if (philo->id % 2 == 0)
         usleep(500);
@@ -103,13 +101,17 @@ void *philo_actions(void *data)
 
         pthread_mutex_lock(&philo->p_meals);
         philo->meals++;
+        if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
+        {
+            pthread_mutex_unlock(&philo->left_fork->fork);
+            pthread_mutex_unlock(&philo->right_fork->fork);
+            pthread_mutex_unlock(&philo->p_meals);
+            break ;
+        }
         pthread_mutex_unlock(&philo->p_meals);
-
         pthread_mutex_unlock(&philo->left_fork->fork);
         pthread_mutex_unlock(&philo->right_fork->fork);
 
-        if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
-            break ;
         // sleep
         if (!check_and_print(philo, "is sleeping\n"))
             break ;
@@ -153,7 +155,7 @@ void *check_for_deads_o(void *data)
                 pthread_mutex_lock(&content->dead);
                 if (!content->is_die)
                 {
-                    philo->content->is_die = 1;
+                    content->is_die = 1;
                     printf("%ld %d died\n", get_time() - content->started_time, philo->id);
                 }
                 pthread_mutex_unlock(&content->dead);
@@ -168,7 +170,7 @@ void *check_for_deads_o(void *data)
         if (content->number_of_meals != -1 && is_all_finish)
         {
             pthread_mutex_lock(&content->dead);
-            philo->content->is_die = 1;
+            content->is_die = 1;
             pthread_mutex_unlock(&content->dead);
             return (NULL);
         }
@@ -199,6 +201,7 @@ void start_actions(t_container *content)
             ft_error("Error in threads!");
         philo = philo->next;
     }
+
     if (pthread_create(&content->thread_monitor, NULL, &check_for_deads_o, content) != 0)
         ft_error("Error in threads!");
     if (pthread_join(content->thread_monitor, NULL) != 0)

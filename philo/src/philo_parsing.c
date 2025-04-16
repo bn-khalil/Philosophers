@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/15 22:31:26 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:27:40 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 void ft_error(char *err)
 {
     printf("%s\n", err);
-    exit(EXIT_FAILURE);
 }
 
-void is_argument_has_number(char *str)
+int  is_argument_has_number(char *str)
 {
     int i;
 
@@ -26,48 +25,80 @@ void is_argument_has_number(char *str)
     while (str[i])
     {
         if (str[i] >= '0' && str[i] <= '9')
-            return ;
+            return (0);
         i++;
     }
     ft_error("An arguments not numeric");
+    return (1);
 }
 
-long is_valid_numbers(char *str)
+int is_valid_numbers(char *str, long *p_nb)
 {
-    long    p_nb;
-
+    *p_nb = 0;
     if (!str || str[0] == '\0')
+    {
         ft_error("Number of philosophers not valid!");
-    is_argument_has_number(str);
+        return (1);
+    }
+    if (is_argument_has_number(str));
+        return (1);
     if (ft_strlen(str) > 10)
+    {
         ft_error("Arguments number is more that int max");
-    p_nb = long_ft_atoi(str);
-    if (p_nb == 0)
+        return (1);
+    }
+    *p_nb = long_ft_atoi(str);
+    if (*p_nb == 0)
+    {
         ft_error("Number must be bigger than 0");
-    if (p_nb > INT_MAX)
+        return (1);
+    }
+    if (*p_nb > INT_MAX)
+    {
         ft_error("Arguments number is more that int max");
-    if (p_nb < 0)
+        return (1);
+    }
+    if (*p_nb < 0)
+    {
         ft_error("All number must be posivite");
-    return (p_nb);
+        return (1);
+    }
+    return (0);
 }
 
-void parse_content(t_container *content, char **av)
+int  parse_content(t_container *content, char **av)
 {
+    long hold_number;
+
+    hold_number = 0;
     content->all_forks = NULL;
     content->all_philos = NULL;
-    content->number_of_philos = is_valid_numbers(av[1]);
-    content->time_to_die = is_valid_numbers(av[2]);
-    content->time_to_eat = is_valid_numbers(av[3]);
-    content->time_to_sleep = is_valid_numbers(av[4]);
     content->is_die = 0;
+    if (is_valid_numbers(av[1], &hold_number))
+        return (1);
+    content->number_of_philos = hold_number;
+    if (is_valid_numbers(av[2], &hold_number))
+        return (1);
+    content->time_to_die = hold_number;
+    if (is_valid_numbers(av[3], &hold_number))
+        return (1);
+    content->time_to_eat = hold_number;
+    if (is_valid_numbers(av[4], &hold_number))
+        return (1);
+    content->time_to_sleep = hold_number;
     if (pthread_mutex_init(&content->dead, NULL) != 0 \
     || pthread_mutex_init(&content->print, NULL) != 0)
     {
-        // free all forks and philos
         ft_error("Failed to init mutex");
+        return (1);
     }
     if (av[5])
-        content->number_of_meals = (int)is_valid_numbers(av[5]);
+    {
+        if (is_valid_numbers(av[5], &hold_number))
+            return (1);
+        content->number_of_meals = (int)hold_number;
+    }
     else
         content->number_of_meals = -1;
+    return (0);
 }

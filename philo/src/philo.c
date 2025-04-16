@@ -6,47 +6,24 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/15 22:12:26 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:31:53 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../inc/philo.h"
 
-// void *check_for_deads(void *data)
-// {
-//     t_philo *philo;
-
-//     while (1)
-//     {
-//         philo = content->all_philos;
-//         while (philo)
-//         {
-//             if (content->number_of_meals != -1 && philo->meals >= content->number_of_meals)
-//                 return ;
-//             if (get_time() - philo->time_last_meal > content->time_to_die)
-//             {
-//                 philo->content->is_die = 1;
-//                 printf("%ld %d died\n", get_time() - content->started_time, philo->id);
-//                 return ;
-//             }
-//             if (philo->content->is_die)
-//                 return ;
-//             philo = philo->next;
-//         }
-//         usleep(1000);
-//     }
-// }
-
-void argument_parsing(t_container *content, char **av)
+void argument_parse_init(t_container *content, char **av)
 {
-    // note for thinking at the bigining
-
-    parse_content(content, av);
+    if (!content)
+        return ;
+    if (parse_content(content, av));
+        return ;
     create_philos(content);
+    if (!content->all_forks || !content->all_philos)
+        return ;
     assign_forks_to_philo(content);
     start_actions(content);
-    ft_free_all(content);
 }
 
 int main(int ac, char **av)
@@ -55,6 +32,7 @@ int main(int ac, char **av)
 
     if (ac < 5 || ac > 6)
         ft_error("Invalid number of arguments!");
-    argument_parsing(&content, av);
+    argument_parse_init(&content, av);
+    ft_free_all(&content);
     return (0);
 }   

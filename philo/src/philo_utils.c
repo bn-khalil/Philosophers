@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:09 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/15 22:10:10 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:17:49 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void ft_free_philos(t_philo *philo)
     while (current)
     {
         next = current->next;
+		pthread_mutex_destroy(&philo->p_meals);
+		pthread_mutex_destroy(&philo->last_meal);
         free(current);
         current = next;
     }
@@ -82,4 +84,6 @@ void ft_free_all(t_container *content)
 {
 	ft_free_philos(content->all_philos);
 	ft_free_forks(content->all_forks);
+	pthread_mutex_destroy(&content->dead);
+	pthread_mutex_destroy(&content->print);
 }

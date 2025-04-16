@@ -6,11 +6,29 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:03 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/15 22:10:04 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 15:17:29 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
+
+int init_lockses(t_philo *philo, t_fork *forks)
+{
+    while (philo && forks)
+    {
+        if (pthread_mutex_init(&philo->last_meal, NULL) != 0 \
+        || pthread_mutex_init(&philo->p_meals, NULL) != 0 \
+        || pthread_mutex_init(&forks->fork, NULL) != 0 \
+        || 
+        ){
+            ft_error("Failed to init mutex");
+            return (1);
+        }
+        philo = philo->next;
+        forks = forks->next;
+    }
+    return (0);
+}
 
 void assign_forks_to_philo(t_container *content)
 {
@@ -20,6 +38,8 @@ void assign_forks_to_philo(t_container *content)
 
     philo = content->all_philos;
     fork  = content->all_forks;
+    if (init_lockses(&philo, &fork));
+        return ;
     hold_first_fork = fork;
     while (philo != NULL)
     {
