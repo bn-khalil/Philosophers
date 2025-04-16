@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 14:17:03 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 20:26:12 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct      s_philo
 }                   t_philo;
 
 void    ft_error(char *err);
-void    is_argument_has_number(char *str);
+int     is_argument_has_number(char *str);
 int     is_valid_numbers(char *str, long *p_nb);
 int     parse_content(t_container *content, char **av);
 int	    ft_isdigit(int c);
@@ -70,10 +70,11 @@ t_philo *ft_lstnew_philo(int philo_number);
 t_fork  *ft_lstnew_fork(int philo_number);
 void	ft_lstadd_back_philo(t_philo **lst, t_philo *new);
 void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
-void    assign_forks_to_philo(t_container *content);
-void    start_actions(t_container *content);
+int     assign_forks_to_philo(t_container *content);
+int     start_actions(t_container *content);
 long    get_time(void);
 void    check_for_deads(t_container *content);
 void    ft_free_all(t_container *content);
+char	*ft_strjoin(char *s1, char *s2);
 
 #endif

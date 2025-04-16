@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:00 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 12:48:17 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 19:18:28 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,88 @@ int check_and_print(t_philo *philo, char *message)
     pthread_mutex_unlock(&philo->content->dead);
     return (1);
 }
+
+
+// void *philo_actions(void *data)
+// {
+//     t_philo *philo = (t_philo*)data;
+//     pthread_mutex_t *first_fork;
+//     pthread_mutex_t *second_fork;
+
+//     if (philo->id % 2 == 0)
+//         usleep(500);
+//     while (1)
+//     {
+//         pthread_mutex_lock(&philo->content->dead);
+//         if (philo->content->is_die)
+//         {
+//             pthread_mutex_unlock(&philo->content->dead);
+//             break ;
+//         }
+//         pthread_mutex_unlock(&philo->content->dead);
+
+//         if (philo->left_fork->fork_id < philo->right_fork->fork_id)
+//         {
+//             first_fork = &philo->left_fork->fork;
+//             second_fork = &philo->right_fork->fork;
+//         }
+//         else
+//         {
+//             first_fork = &philo->right_fork->fork;
+//             second_fork = &philo->left_fork->fork;  
+//         }
+
+//         pthread_mutex_lock(first_fork);
+//         if (!check_and_print(philo, "has taken a fork\n"))
+//         {
+//             pthread_mutex_unlock(first_fork);
+//             break ;
+//         }
+//         pthread_mutex_lock(second_fork);
+//         if (!check_and_print(philo, "has taken a fork\n"))
+//         {
+//             pthread_mutex_unlock(first_fork);
+//             pthread_mutex_unlock(second_fork);
+//             break ;
+//         }
+
+//         pthread_mutex_lock(&philo->last_meal);
+//         philo->time_last_meal = get_time();
+//         pthread_mutex_unlock(&philo->last_meal);
+
+//         if (!check_and_print(philo, "is eating\n"))
+//         {
+//             pthread_mutex_unlock(first_fork);
+//             pthread_mutex_unlock(second_fork);
+//             break ;
+//         }
+
+//         ft_sleep(philo->content->time_to_eat, philo->content);
+
+//         pthread_mutex_lock(&philo->p_meals);
+//         philo->meals++;
+//         if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
+//         {
+//             pthread_mutex_unlock(first_fork);
+//             pthread_mutex_unlock(second_fork);
+//             pthread_mutex_unlock(&philo->p_meals);
+//             break ;
+//         }
+//         pthread_mutex_unlock(&philo->p_meals);
+//         pthread_mutex_unlock(first_fork);
+//         pthread_mutex_unlock(second_fork);
+
+//         // sleep
+//         if (!check_and_print(philo, "is sleeping\n"))
+//             break ;
+//         ft_sleep(philo->content->time_to_sleep, philo->content);
+//         // thinking
+//         if (!check_and_print(philo, "is thinking\n"))
+//             break ;
+//     }
+//     return (NULL);
+// }
+
 
 void *philo_actions(void *data)
 {
@@ -179,17 +261,17 @@ void *check_for_deads_o(void *data)
     return (NULL);
 }
 
-void start_actions(t_container *content)
+int start_actions(t_container *content)
 {
     t_philo *philo = content->all_philos;
 
     if (!philo)
-        return ;
+        return (1);
     content->started_time = get_time();
     if (!philo->next)
     {
         only_one_phlio(content);
-        return ;
+        return (0);
     }
     while (philo)
     {
@@ -198,19 +280,20 @@ void start_actions(t_container *content)
         pthread_mutex_unlock(&philo->last_meal);
         philo->content = content;
         if (pthread_create(&philo->thread, NULL, &philo_actions, philo) != 0)
-            ft_error("Error in threads!");
+            return (ft_error("Error in threads!"), 1);
         philo = philo->next;
     }
 
     if (pthread_create(&content->thread_monitor, NULL, &check_for_deads_o, content) != 0)
-        ft_error("Error in threads!");
+        return (ft_error("Error in threads!"), 1);
     if (pthread_join(content->thread_monitor, NULL) != 0)
-        ft_error("Error in join for threads!");
+        return (ft_error("Error in join for threads!"), 1);
     philo = content->all_philos;
     while (philo)
     {
         if (pthread_join(philo->thread, NULL) != 0)
-            ft_error("Error in join for threads!");
+            return (ft_error("Error in join for threads!"), 1);
         philo = philo->next;
     }
+    return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 14:27:40 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 20:42:26 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,29 @@ int  is_argument_has_number(char *str)
     i = 0;
     while (str[i])
     {
-        if (str[i] >= '0' && str[i] <= '9')
-            return (0);
+        if ((str[i] < '0' || str[i] > '9') && str[i] != '+' && str[i] != '-')
+        {
+            ft_error("Some or all arguments not numeric");
+            return (1);
+        }
+        if ((str[i] == '+' || str[i] == '-') && (str[i + 1] != '\0' && !ft_isdigit(str[i + 1])))
+        {
+            ft_error("Some or all arguments not numeric");
+            return (1);
+        }
         i++;
     }
-    ft_error("An arguments not numeric");
-    return (1);
+    return (0);
 }
 
 int is_valid_numbers(char *str, long *p_nb)
 {
-    *p_nb = 0;
     if (!str || str[0] == '\0')
     {
         ft_error("Number of philosophers not valid!");
         return (1);
     }
-    if (is_argument_has_number(str));
+    if (is_argument_has_number(str))
         return (1);
     if (ft_strlen(str) > 10)
     {

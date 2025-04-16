@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:09 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 14:17:49 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/16 20:26:20 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,33 @@ void ft_free_all(t_container *content)
 	ft_free_forks(content->all_forks);
 	pthread_mutex_destroy(&content->dead);
 	pthread_mutex_destroy(&content->print);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int		strlen;
+	char	*str;
+	int		i;
+
+	i = 0;
+	if (!s1)
+	{
+		s1 = malloc(sizeof(char) * 1);
+		s1[0] = '\0';
+	}
+	strlen = ft_strlen(s1) + ft_strlen(s2);
+	str = malloc(sizeof(char) * strlen + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	strlen = 0;
+	while (s2[strlen])
+		str[i++] = s2[strlen++];
+	str[i] = '\0';
+	free(s1);
+	return (str);
 }
