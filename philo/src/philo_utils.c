@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:09 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 20:26:20 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:50:09 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ long	long_ft_atoi(const char *str)
 
 void ft_free_philos(t_philo *philo)
 {
-    t_philo *current = philo;
+    t_philo *current;
     t_philo *next;
 
+	current = philo;
     while (current)
     {
         next = current->next;
@@ -68,9 +69,10 @@ void ft_free_philos(t_philo *philo)
 
 void ft_free_forks(t_fork *fork)
 {
-    t_fork *current = fork;
+    t_fork *current;
     t_fork *next;
 
+	current = fork;
     while (current)
     {
         next = current->next;
@@ -82,8 +84,12 @@ void ft_free_forks(t_fork *fork)
 
 void ft_free_all(t_container *content)
 {
-	ft_free_philos(content->all_philos);
-	ft_free_forks(content->all_forks);
+	if (!content)
+		return ;
+	if (content->all_philos)
+		ft_free_philos(content->all_philos);
+	if (content->all_forks)
+		ft_free_forks(content->all_forks);
 	pthread_mutex_destroy(&content->dead);
 	pthread_mutex_destroy(&content->print);
 }

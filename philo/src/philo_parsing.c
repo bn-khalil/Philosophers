@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 20:42:26 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:10:45 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int  is_argument_has_number(char *str)
             ft_error("Some or all arguments not numeric");
             return (1);
         }
-        if ((str[i] == '+' || str[i] == '-') && (str[i + 1] != '\0' && !ft_isdigit(str[i + 1])))
+        if ((str[i] == '+' || str[i] == '-') && !ft_isdigit(str[i + 1]))
         {
             ft_error("Some or all arguments not numeric");
             return (1);

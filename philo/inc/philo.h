@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/16 20:26:12 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:05:12 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,17 @@ void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
 int     assign_forks_to_philo(t_container *content);
 int     start_actions(t_container *content);
 long    get_time(void);
-void    check_for_deads(t_container *content);
+void    *check_for_deaths(void *data);
 void    ft_free_all(t_container *content);
 char	*ft_strjoin(char *s1, char *s2);
+int     ft_philo_die(t_philo *philo);
+int     ft_take_forks(t_philo *philo);
+int     ft_philo_eating(t_philo *philo);
+int     check_and_print(t_philo *philo, char *message);
+int    ft_sleep(long time, t_container *content);
+int     ft_philo_sleeping(t_philo *philo);
+int     ft_philo_thinking(t_philo *philo);
+int     ft_wait(t_container *content, t_philo *philo);
+void    ft_put_forks(t_philo *philo);
 
 #endif
