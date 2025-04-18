@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/17 14:03:14 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:19:34 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,13 @@ int check_and_print(t_philo *philo, char *message)
     return (1);
 }
 
-int ft_wait(t_container *content, t_philo *philo)
+int ft_wait(t_container *content, t_philo *philo, int flag)
 {
-    if (pthread_join(content->thread_monitor, NULL) != 0)
-        return (ft_error("Error in join for threads!"), 1);
+    if (flag)
+    {
+        if (pthread_join(content->thread_monitor, NULL) != 0)
+            return (ft_error("Error in join for threads!"), 1);
+    }
     philo = content->all_philos;
     while (philo)
     {

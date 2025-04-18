@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:00 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/17 14:07:49 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:20:10 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,16 @@ int start_actions(t_container *content)
         pthread_mutex_unlock(&philo->last_meal);
         philo->content = content;
         if (pthread_create(&philo->thread, NULL, &philo_actions, philo) != 0)
+        {
+            ft_wait(content, content->all_philos, 1); // shoud check is it needed
             return (ft_error("Error in threads!"), 1);
+        }
         philo = philo->next;
     }
     if (pthread_create(&content->thread_monitor, NULL, \
     &check_for_deaths, content) != 0)
         return (ft_error("Error in threads!"), 1);
-    if (ft_wait(content, philo))
+    if (ft_wait(content, philo, 0))
         return (1);
     return (0);
 }

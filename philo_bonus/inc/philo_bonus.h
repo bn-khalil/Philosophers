@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 10:19:55 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 12:00:05 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-#define PHILO_H
+#ifndef PHILO_BONUS_H
+#define PHILO_BONUS_H
 
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <semaphore.h>
 # include <limits.h>
 # include <sys/time.h>
 
 typedef struct      s_fork
 {
     int             fork_id;
-    pthread_mutex_t fork;
+    char            *fork_name;
+    sem_t           *fork;
     struct          s_fork *next;
 }                   t_fork;
 
 typedef struct      s_container
 {
-    struct   s_philo         *all_philos;
+    struct s_philo  *all_philos;
     t_fork          *all_forks;
     int             number_of_meals;
     int             is_die;
@@ -38,20 +40,18 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
-    pthread_mutex_t dead;
-    pthread_mutex_t print;
+    sem_t           dead;
+    sem_t           print;
     pthread_t       thread_monitor;
 }                   t_container;
 
 typedef struct      s_philo
 {
     int             id;
-    pthread_t       thread;
-    long            time_last_meal;
-    pthread_mutex_t last_meal;
-    pthread_mutex_t p_meals;
-    t_fork          *left_fork;
-    t_fork          *right_fork;
+    pid_t           process;
+    sem_t           *last_meal;
+    long            *time_last_meal;
+    sem_t           p_meals;
     int             meals;
     t_container     *content;
     struct          s_philo *next;
@@ -60,29 +60,16 @@ typedef struct      s_philo
 void    ft_error(char *err);
 int     is_argument_has_number(char *str);
 int     is_valid_numbers(char *str, long *p_nb);
-int     parse_content(t_container *content, char **av);
 int	    ft_isdigit(int c);
 size_t	ft_strlen(const char *s);
 long	long_ft_atoi(const char *str);
-void    create_philos(t_container *content);
 t_philo *ft_lstnew_philo(int philo_number);
 t_fork  *ft_lstnew_fork(int philo_number);
-void	ft_lstadd_back_philo(t_philo **lst, t_philo *new);
-void	ft_lstadd_back_fork(t_fork **lst, t_fork *new);
-int     assign_forks_to_philo(t_container *content);
-int     start_actions(t_container *content);
 long    get_time(void);
 void    *check_for_deaths(void *data);
-void    ft_free_all(t_container *content);
 char	*ft_strjoin(char *s1, char *s2);
-int     ft_philo_die(t_philo *philo);
-int     ft_take_forks(t_philo *philo);
-int     ft_philo_eating(t_philo *philo);
-int     check_and_print(t_philo *philo, char *message);
-int    ft_sleep(long time, t_container *content);
-int     ft_philo_sleeping(t_philo *philo);
-int     ft_philo_thinking(t_philo *philo);
-int     ft_wait(t_container *content, t_philo *philo, int flag);
-void    ft_put_forks(t_philo *philo);
+int     ft_sleep(long time, t_container *content);
+int     parse_content(t_container *content, char **av);
+void    create_philos(t_container *content);
 
 #endif
