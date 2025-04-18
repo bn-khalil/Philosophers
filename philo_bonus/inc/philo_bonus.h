@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 12:00:05 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 18:55:25 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <semaphore.h>
 # include <limits.h>
 # include <sys/time.h>
+
+# define FORKS "/fork"
+# define DEAD "/dead"
+# define PRINT "/print"
 
 typedef struct      s_fork
 {
@@ -40,8 +44,10 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
-    sem_t           dead;
-    sem_t           print;
+    sem_t           *dead;
+    char            *dead_name;
+    sem_t           *print;
+    char            *print_name;
     pthread_t       thread_monitor;
 }                   t_container;
 
@@ -50,9 +56,13 @@ typedef struct      s_philo
     int             id;
     pid_t           process;
     sem_t           *last_meal;
+    char            *last_meal_name;
     long            *time_last_meal;
-    sem_t           p_meals;
+    sem_t           *p_meals;
+    char            *p_meals_name;
     int             meals;
+    t_fork          *left_fork;
+    t_fork          *right_fork;
     t_container     *content;
     struct          s_philo *next;
 }                   t_philo;
@@ -71,5 +81,7 @@ char	*ft_strjoin(char *s1, char *s2);
 int     ft_sleep(long time, t_container *content);
 int     parse_content(t_container *content, char **av);
 void    create_philos(t_container *content);
+int     assign_forks_to_philo(t_container *content);
+char	*ft_itoa(int n);
 
 #endif

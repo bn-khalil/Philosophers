@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 12:14:16 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 17:28:02 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,22 @@ int  parse_content(t_container *content, char **av)
     if (is_valid_numbers(av[4], &hold_number))
         return (1);
     content->time_to_sleep = hold_number;
+
+    // create semaphor for dead
+    sem_unlink(DEAD);
+    content->dead = sem_open(DEAD, O_CREAT, 0644, 1);
+    if (content->dead == SEM_FAILED)
+        return (1);
+    sem_unlink(PRINT);
+
+    // create semaphor for dead
+    content->print = sem_open(PRINT, O_CREAT, 0644, 1);
+    if (content->print == SEM_FAILED)
+    {
+        sem_close(content->dead);
+        sem_unlink(DEAD);
+        return (1);
+    }
     if (av[5])
     {
         if (is_valid_numbers(av[5], &hold_number))

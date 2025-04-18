@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 12:40:00 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/18 18:10:03 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ int  argument_parse_init(t_container *content, char **av)
     if (!content->all_forks || !content->all_philos)
         return (1);
     if (assign_forks_to_philo(content))
-        return (ft_free_all(content), 1);
+        return (1);
+    // if (start_philo_action(content))
+    //     return (1);
     return (0);
 }
 
