@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:03 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 19:49:22 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/19 09:31:16 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int init_lockses(t_philo *philo, t_fork *forks)
 
 int assign_forks_to_philo(t_container *content)
 {
-    (void) content;
     t_philo *philo;
     t_fork  *fork;
     t_fork  *hold_first_fork;
@@ -76,16 +75,3 @@ int assign_forks_to_philo(t_container *content)
     return (0);
 }
 
-// void create_philos(t_container *content)
-// {
-//     int         i;
-//     if (!content)
-//         return ;
-//     i = 1;
-//     while (i <= content->number_of_philos)
-//     {
-//         ft_lstadd_back_philo(&content->all_philos, ft_lstnew_philo(i));
-//         ft_lstadd_back_fork(&content->all_forks, ft_lstnew_fork(i));
-//         i++;
-//     }
-// }

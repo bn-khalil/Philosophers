@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 18:55:25 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/19 11:03:00 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,21 @@
 # define DEAD "/dead"
 # define PRINT "/print"
 
-typedef struct      s_fork
-{
-    int             fork_id;
-    char            *fork_name;
-    sem_t           *fork;
-    struct          s_fork *next;
-}                   t_fork;
+// typedef struct      s_fork
+// {
+//     int             fork_id;
+//     struct          s_fork *next;
+// }                   t_fork;
 
 typedef struct      s_container
 {
     struct s_philo  *all_philos;
-    t_fork          *all_forks;
+    sem_t           *fork;
+    char            *fork_name;
+    sem_t           *dead;
+    char            *dead_name;
+    sem_t           *print;
+    char            *print_name;
     int             number_of_meals;
     int             is_die;
     long            number_of_philos;
@@ -44,25 +47,20 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
-    sem_t           *dead;
-    char            *dead_name;
-    sem_t           *print;
-    char            *print_name;
     pthread_t       thread_monitor;
 }                   t_container;
 
 typedef struct      s_philo
 {
     int             id;
+    pthread_t       monitor;
     pid_t           process;
+    int             meals;
+    long            *time_last_meal;
     sem_t           *last_meal;
     char            *last_meal_name;
-    long            *time_last_meal;
     sem_t           *p_meals;
     char            *p_meals_name;
-    int             meals;
-    t_fork          *left_fork;
-    t_fork          *right_fork;
     t_container     *content;
     struct          s_philo *next;
 }                   t_philo;
@@ -83,5 +81,17 @@ int     parse_content(t_container *content, char **av);
 void    create_philos(t_container *content);
 int     assign_forks_to_philo(t_container *content);
 char	*ft_itoa(int n);
+int     start_philo_action(t_container *content);
+void    *check_for_deaths(void *data);
+int     philo_actions(t_philo *philo);
+long    get_time();
+int     check_and_print(t_philo *philo, char *message);
+int     ft_wait(t_container *content, t_philo *philo, int flag);
+void    ft_put_forks(t_philo *philo);
+int     ft_philo_eating(t_philo *philo);
+int     ft_philo_thinking(t_philo *philo);
+int     ft_philo_die(t_philo *philo);
+int     ft_take_forks(t_philo *philo);
+int     ft_philo_sleeping(t_philo *philo);
 
 #endif
