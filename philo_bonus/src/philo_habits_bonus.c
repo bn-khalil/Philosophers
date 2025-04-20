@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 11:32:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 13:05:10 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 20:59:27 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 // int ft_take_forks(t_philo *philo, t_container *content)
 // {
 //     sem_wait(content->fork);
-//     if (!check_and_print(philo, content, "has taken a fork\n"))
+//     if (!check_and_print(philo, "has taken a fork\n"))
 //     {
 //         sem_post(content->fork);
 //         return (1);
 //     }
 //     sem_wait(content->fork);
-//     if (!check_and_print(philo, content, "has taken a fork\n"))
+//     if (!check_and_print(philo, "has taken a fork\n"))
 //     {
 //         ft_put_forks(content);
 //         return (1);
@@ -34,7 +34,7 @@
 //     sem_wait(philo->last_meal);
 //     philo->time_last_meal = get_time();
 //     sem_post(philo->last_meal);
-//     if (!check_and_print(philo, content, "is eating\n"))
+//     if (!check_and_print(philo, "is eating\n"))
 //     {
 //         ft_put_forks(content);
 //         return (1);
@@ -55,7 +55,7 @@
 
 // int ft_philo_sleeping(t_philo *philo, t_container *content)
 // {
-//     if (!check_and_print(philo, content,"is sleeping\n"))
+//     if (!check_and_print(philo,"is sleeping\n"))
 //         return (1);
 //     if (ft_sleep(philo->content->time_to_sleep, content))
 //         return (1);
@@ -64,7 +64,8 @@
 
 // int ft_philo_thinking(t_philo *philo, t_container *content)
 // {
-//     if (!check_and_print(philo, content,"is thinking\n"))
+//     (void)content;
+//     if (!check_and_print(philo,"is thinking\n"))
 //         return (1);
 //     return (0);
 // }

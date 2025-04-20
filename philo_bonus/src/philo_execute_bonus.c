@@ -2,109 +2,122 @@
 
 void ft_kill(t_container *content)
 {
-    int i = 0;
-    while (i < content->number_of_philos)
+    t_philo *philo;
+
+    philo = content->all_philos;
+    while (philo)
     {
-        if (content->pid[i] > 0)
-            kill(content->pid[i], SIGKILL);
-        i++;
+        if (philo->monitor)
+            pthread_detach(philo->monitor);
+        if (philo->process > 0)
+            kill(philo->process, SIGKILL);
+        philo = philo->next;
     }
+    exit(0);
 }
 
-int philo_actions(t_container *content, int i)
+int philo_actions(t_philo *philo)
 {
-    if (i % 2 == 0)
+    t_container *content;
+
+    content = philo->content;
+    if (philo->id % 2 == 0)
         usleep(500);
     while (1)
     {
         sem_wait(content->fork);
-        printf("%ld %d has taken a fork\n", get_time() - content->started_time, i);
+        check_and_print(philo, content, "has taken a fork\n");
         sem_wait(content->fork);
-        printf("%ld %d has taken a fork\n", get_time() - content->started_time, i);
-        sem_wait(content->last_meal);
-        content->time_last_meal = get_time();
-        sem_post(content->last_meal);
-        printf("%ld %d is eating \n", get_time() - content->started_time, i);
+        check_and_print(philo, content, "has taken a fork\n");
+        sem_wait(philo->last_meal);
+        philo->time_last_meal = get_time();
+        sem_post(philo->last_meal);
+        check_and_print(philo, content, "is eating\n");
         ft_sleep(content->time_to_eat, content);
-        content->meals++;
+        sem_wait(philo->p_meals);
+        philo->meals++;
+        sem_post(philo->p_meals);
         sem_post(content->fork);
         sem_post(content->fork);
-        printf("%ld %d is sleeping \n", get_time() - content->started_time, i);
-        ft_sleep(content->time_to_sleep, content);
-        printf("%ld %d is thinking \n", get_time() - content->started_time, i);
+        check_and_print(philo, content,"is sleeping\n");
+        ft_sleep(philo->content->time_to_sleep, content);
+        check_and_print(philo, content,"is thinking\n");
+        if (content->number_of_meals != -1 && philo->meals >= content->number_of_meals)
+            exit(0);
     }
     return (0);
 }
 
 void *check_for_deaths(void *data)
 {
-    long spended_time;
+    t_philo *philo;
+    int is_all_done;
 
-    t_container *content = (t_container *)data;
+    philo = (t_philo *)data;
+    is_all_done = 0;
     while (1)
     {
-        sem_wait(content->last_meal);
-        spended_time = get_time() - content->time_last_meal;
-        sem_post(content->last_meal);
-        if (spended_time > content->time_to_die)
+        sem_wait(philo->last_meal);
+        if (philo->content->time_to_die < get_time() - philo->time_last_meal)
         {
-            sem_wait(content->print);
-            printf("%ld died\n", get_time() - content->started_time);
-            sem_post(content->print);
+            sem_post(philo->last_meal);
+            sem_wait(philo->content->print);
+            printf("%ld %d %s", get_time() - philo->content->started_time, 
+                   philo->id, "died\n");
             exit(1);
         }
-        usleep(1000);
+        sem_wait(philo->p_meals);
+        if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
+           is_all_done = 1;
+        sem_post(philo->p_meals);
+        if (philo->content->number_of_meals != -1 && is_all_done)
+        {
+            sem_post(philo->last_meal);
+            exit(1);
+        }
+        sem_post(philo->last_meal);
+        usleep(500);
     }
     return (NULL);
 }
 
-void prepare(t_container *content, int i)
-{
-    content->last_meal_name = ft_strjoin("meal_name_", ft_itoa(i));
-    sem_unlink(content->last_meal_name);
-	content->last_meal = sem_open(content->last_meal_name, O_CREAT, 0644, 1);
-}
-
 int start_philo_action(t_container *content)
 {
-    int i;
-    int state;
+    t_philo *philos;
+    pid_t pid;
+    int status;
 
-    i = 0;
-    state = 0;
-    while (i < content->number_of_philos)
+    content->started_time = get_time();
+    philos = content->all_philos;
+    while (philos)
     {
-        content->pid[i] = fork();
-        if (content->pid[i] < 0)
-            ft_error("fork");
-        if (content->pid[i] == 0)
+        philos->content = content;
+        philos->time_last_meal = content->started_time;
+        philos->process = fork();
+        if (philos->process < 0)
         {
-            prepare(content, i);
-            content->started_time = get_time();
-            if (pthread_create(&content->monitor, NULL, &check_for_deaths, content) != 0)
-                printf("error\n");
-            pthread_detach(content->monitor);
-            sem_wait(content->dead);
-            content->time_last_meal = get_time();
-            sem_post(content->dead);
-            philo_actions(content, i);
+            ft_error("Fork failed");
+            ft_kill(content);
+            return (1);
+        }
+        if (philos->process == 0)
+        {
+            if (pthread_create(&philos->monitor, NULL, check_for_deaths, philos) != 0)
+                exit(1);
+            if (pthread_detach(philos->monitor) != 0)
+                exit(1);
+            philo_actions(philos);
             exit(0);
         }
-        i++;
+        philos = philos->next;
     }
-    i = 0;
-    while (i < content->number_of_meals)
+    while ((pid = waitpid(-1, &status, 0)) > 0)
     {
-        while (waitpid(content->pid[i], &state, -1) > 0)
+        if (status != 0)
         {
-            if (state != 0)
-            {
-                ft_kill(content);
-                break ;
-            }
+            ft_kill(content);
+            break;
         }
-        i++;
     }
-    
     return (0);
 }

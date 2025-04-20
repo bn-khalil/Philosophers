@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 14:57:57 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 20:58:25 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,85 @@ int ft_sleep(long time, t_container *content)
     return (0);
 }
 
-// int check_and_print(t_philo *philo, t_container *content, char *message)
+// int check_and_print(t_philo *philo, char *message)
 // {
-//     sem_wait(content->print);
-//     printf("%ld %d %s", get_time() - content->started_time, \
+//     sem_wait(philo->content->dead);
+//     if (philo->content->is_die)
+//     {
+//         sem_post(philo->content->dead);
+//         return (0);
+//     }
+//     sem_wait(philo->content->print);
+//     printf("%ld %d %s", get_time() - philo->content->started_time, \
 //     philo->id, message);
-//     sem_post(content->print);
+//     sem_post(philo->content->print);
+//     sem_post(philo->content->dead);
 //     return (1);
 // }
+void check_and_print(t_philo *philo, t_container *content, char *message)
+{
+    sem_wait(content->print);
+    printf("%ld %d %s", get_time() - content->started_time, philo->id, message);
+    sem_post(content->print);
+}
 
 void ft_put_forks(t_container *content)
 {
     sem_post(content->fork);
     sem_post(content->fork);
+}
+
+void clean_philo(t_philo *philo)
+{
+    if (philo)
+    {
+        if (philo->last_meal)
+        {
+            sem_close(philo->last_meal);
+            sem_unlink(philo->last_meal_name);
+        }
+        if (philo->p_meals)
+        {
+            sem_close(philo->p_meals);
+            sem_unlink(philo->p_meals_name);
+        }
+        if (philo->last_meal_name)
+            free(philo->last_meal_name);
+        if (philo->p_meals_name)
+            free(philo->p_meals_name);
+    }
+}
+
+void clean_res(t_container *content)
+{
+    t_philo *philo;
+    t_philo *tmp;
+
+    philo = content->all_philos;
+    if (content)
+    {
+        if (content->fork)
+        {
+            sem_close(content->fork);
+            sem_unlink(FORKS);
+        }
+        if (content->dead)
+        {
+            sem_close(content->dead);
+            sem_unlink(DEAD);
+        }
+        if (content->print)
+        {
+            sem_close(content->print);
+            sem_unlink(PRINT);
+        }
+        while (philo)
+        {
+            tmp = philo;
+            philo = philo->next;
+            clean_philo(tmp);
+            free(tmp);
+        }
+        content->all_philos = NULL;
+    }
 }

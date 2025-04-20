@@ -6,17 +6,15 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 14:56:04 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:53:22 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo_bonus.h"
 
-
 void ft_error(char *err)
 {
     printf("%s\n", err);
-    exit(EXIT_FAILURE);
 }
 
 int  is_argument_has_number(char *str)
@@ -52,7 +50,7 @@ int is_valid_numbers(char *str, long *p_nb)
         return (1);
     if (ft_strlen(str) > 10)
     {
-        ft_error("Arguments number is more that int max");
+        ft_error("Arguments number is more than int max");
         return (1);
     }
     *p_nb = long_ft_atoi(str);
@@ -63,12 +61,12 @@ int is_valid_numbers(char *str, long *p_nb)
     }
     if (*p_nb > INT_MAX)
     {
-        ft_error("Arguments number is more that int max");
+        ft_error("Arguments number is more than int max");
         return (1);
     }
     if (*p_nb < 0)
     {
-        ft_error("All number must be posivite");
+        ft_error("All numbers must be positive");
         return (1);
     }
     return (0);
@@ -76,13 +74,10 @@ int is_valid_numbers(char *str, long *p_nb)
 
 int init_content(t_container *content)
 {
-    // create semaphor for dead
     sem_unlink(DEAD);
     content->dead = sem_open(DEAD, O_CREAT, 0644, 1);
     if (content->dead == SEM_FAILED)
         return (1);
-
-    // create semaphor for dead
     sem_unlink(PRINT);
     content->print = sem_open(PRINT, O_CREAT, 0644, 1);
     if (content->print == SEM_FAILED)
@@ -91,8 +86,6 @@ int init_content(t_container *content)
         sem_unlink(DEAD);
         return (1);
     }
-
-    // create forks
     sem_unlink(FORKS);
     content->fork = sem_open(FORKS, O_CREAT, 0644, content->number_of_philos);
     if (content->fork == SEM_FAILED)
@@ -106,11 +99,13 @@ int init_content(t_container *content)
     return (0);
 }
 
-int  parse_content(t_container *content, char **av)
+int parse_content(t_container *content, char **av)
 {
     long hold_number;
 
     hold_number = 0;
+    content->all_philos = NULL;
+    content->is_die = 0;
     content->started_time = 0;
     if (is_valid_numbers(av[1], &hold_number))
         return (1);
@@ -124,9 +119,6 @@ int  parse_content(t_container *content, char **av)
     if (is_valid_numbers(av[4], &hold_number))
         return (1);
     content->time_to_sleep = hold_number;
-    content->pid = malloc(sizeof(int) * content->number_of_philos);
-    if (!content->pid)
-        ;// check here
     if (av[5])
     {
         if (is_valid_numbers(av[5], &hold_number))
