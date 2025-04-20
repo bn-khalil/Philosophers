@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:11:59 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 21:58:44 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 22:50:12 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ typedef struct      s_philo
     int             id;
     pthread_t       monitor;
     pid_t           process;
-    int             meals;
-    long            time_last_meal;
+    _Atomic int     meals;
+    _Atomic long    time_last_meal;
     sem_t           *last_meal;
     char            *last_meal_name;
     sem_t           *p_meals;

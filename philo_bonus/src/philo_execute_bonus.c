@@ -39,13 +39,26 @@ int philo_actions(t_philo *philo)
         sem_post(philo->p_meals);
         sem_post(content->fork);
         sem_post(content->fork);
+        if (content->number_of_meals != -1 && philo->meals \
+        >= content->number_of_meals)
+            exit(0);
         check_and_print(philo, content,"is sleeping\n");
         ft_sleep(philo->content->time_to_sleep, content);
         check_and_print(philo, content,"is thinking\n");
-        if (content->number_of_meals != -1 && philo->meals >= content->number_of_meals)
-            exit(0);
     }
     return (0);
+}
+
+void check_is_die(t_philo *philo)
+{
+    if (philo->content->time_to_die < get_time() - philo->time_last_meal)
+    {
+        sem_post(philo->last_meal);
+        sem_wait(philo->content->print);
+        printf("%ld %d %s", get_time() - philo->content->started_time, 
+                philo->id, "died\n");
+        exit(1);
+    }
 }
 
 void *check_for_deaths(void *data)
@@ -58,16 +71,10 @@ void *check_for_deaths(void *data)
     while (1)
     {
         sem_wait(philo->last_meal);
-        if (philo->content->time_to_die < get_time() - philo->time_last_meal)
-        {
-            sem_post(philo->last_meal);
-            sem_wait(philo->content->print);
-            printf("%ld %d %s", get_time() - philo->content->started_time, 
-                   philo->id, "died\n");
-            exit(1);
-        }
+        check_is_die(philo);
         sem_wait(philo->p_meals);
-        if (philo->content->number_of_meals != -1 && philo->meals >= philo->content->number_of_meals)
+        if (philo->content->number_of_meals != -1 && philo->meals \
+        >= philo->content->number_of_meals)
            is_all_done = 1;
         sem_post(philo->p_meals);
         if (philo->content->number_of_meals != -1 && is_all_done)
@@ -103,9 +110,9 @@ int start_philo_action(t_container *content)
         if (philos->process == 0)
         {
             if (pthread_create(&philos->monitor, NULL, check_for_deaths, philos) != 0)
-                exit(1);
+                exit(1);//  clean with message mabey
             if (pthread_detach(philos->monitor) != 0)
-                exit(1);
+                exit(1); // clean with message mabey
             philo_actions(philos);
             exit(0);
         }

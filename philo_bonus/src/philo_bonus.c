@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 16:40:03 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:12:52 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,15 @@ int  argument_parse_init(t_container *content, char **av)
     return (0);
 }
 
+void f()
+{
+    system("leaks philo_bonus");
+}
 int main(int ac, char **av)
 {
     t_container content;
     
+    atexit(f);
     if (ac < 5 || ac > 6)
     {
         ft_error("Invalid number of arguments!");

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:09:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 16:54:38 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:18:51 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 t_philo *ft_lstnew_philo(int philo_number)
 {
     t_philo *head;
+    char *hold;
 
     head = malloc(sizeof(t_philo));
     if (!head)
@@ -25,16 +26,18 @@ t_philo *ft_lstnew_philo(int philo_number)
     head->next = NULL;
     head->process = 0;
     head->content = NULL;
-    head->last_meal_name = ft_strjoin("/last_meal_", ft_itoa(head->id));
+    hold = ft_itoa(head->id);
+    head->last_meal_name = ft_strjoin("/last_meal_", hold);
     sem_unlink(head->last_meal_name);
     head->last_meal = sem_open(head->last_meal_name, O_CREAT, 0644, 1);
     if (head->last_meal == SEM_FAILED)
     {
         free(head->last_meal_name);
         free(head);
+        free(hold);
         return (NULL);
     }
-    head->p_meals_name = ft_strjoin("/p_meal_", ft_itoa(head->id));
+    head->p_meals_name = ft_strjoin("/p_meal_", hold);
     sem_unlink(head->p_meals_name);
     head->p_meals = sem_open(head->p_meals_name, O_CREAT, 0644, 1);
     if (head->p_meals == SEM_FAILED)
@@ -44,8 +47,10 @@ t_philo *ft_lstnew_philo(int philo_number)
         free(head->last_meal_name);
         free(head->p_meals_name);
         free(head);
+        free(hold);
         return (NULL);
     }
+    free(hold);
     return (head);
 }
 

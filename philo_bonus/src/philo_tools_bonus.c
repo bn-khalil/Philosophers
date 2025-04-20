@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 20:58:25 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:14:55 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void clean_res(t_container *content)
             tmp = philo;
             philo = philo->next;
             clean_philo(tmp);
+            free(tmp->last_meal_name);
+            free(tmp->p_meals_name);
             free(tmp);
         }
         content->all_philos = NULL;
