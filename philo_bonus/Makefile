@@ -6,7 +6,7 @@
 #    By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/15 22:10:16 by kben-tou          #+#    #+#              #
-#    Updated: 2025/04/19 10:16:23 by kben-tou         ###   ########.fr        #
+#    Updated: 2025/04/19 11:40:17 by kben-tou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC = $(MANDATORY_DIR)philo_bonus.c \
 	  $(MANDATORY_DIR)philo_initial_bonus.c \
 	  $(MANDATORY_DIR)philo_execute_bonus.c \
 	  $(MANDATORY_DIR)philo_habits_bonus.c \
+	  $(MANDATORY_DIR)philo_tools_bonus.c \
 
 OBJS = $(SRC:.c=.o)
 CFLAGS =  -Wall -Wextra -Werror #-fsanitize=thread  # malloc sdfsd fsanitize remove

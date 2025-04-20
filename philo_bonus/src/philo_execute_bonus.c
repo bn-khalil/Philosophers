@@ -1,89 +1,110 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo_execute_bonus.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 17:56:19 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/19 10:18:07 by kben-tou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../inc/philo_bonus.h"
 
-int philo_actions(t_philo *philo)
+void ft_kill(t_container *content)
 {
-    if (philo->id % 2 == 0)
+    int i = 0;
+    while (i < content->number_of_philos)
+    {
+        if (content->pid[i] > 0)
+            kill(content->pid[i], SIGKILL);
+        i++;
+    }
+}
+
+int philo_actions(t_container *content, int i)
+{
+    if (i % 2 == 0)
         usleep(500);
     while (1)
     {
-        // if (ft_philo_die(philo))
-        //     return (1);        
-        if (ft_take_forks(philo))
-            return (1);
-        if (ft_philo_eating(philo))
-            return (1);
-        if (ft_philo_sleeping(philo))
-            return (1);
-        if (ft_philo_thinking(philo))
-            return (1);
+        sem_wait(content->fork);
+        printf("%ld %d has taken a fork\n", get_time() - content->started_time, i);
+        sem_wait(content->fork);
+        printf("%ld %d has taken a fork\n", get_time() - content->started_time, i);
+        sem_wait(content->last_meal);
+        content->time_last_meal = get_time();
+        sem_post(content->last_meal);
+        printf("%ld %d is eating \n", get_time() - content->started_time, i);
+        ft_sleep(content->time_to_eat, content);
+        content->meals++;
+        sem_post(content->fork);
+        sem_post(content->fork);
+        printf("%ld %d is sleeping \n", get_time() - content->started_time, i);
+        ft_sleep(content->time_to_sleep, content);
+        printf("%ld %d is thinking \n", get_time() - content->started_time, i);
     }
     return (0);
 }
 
 void *check_for_deaths(void *data)
 {
-    t_philo *philo = (t_philo *)data;
-    // int is_all_finish;
+    long spended_time;
 
+    t_container *content = (t_container *)data;
     while (1)
     {
-        // is_all_finish = 1;
-        // philo = content->all_philos;
-        // while (philo)
-        // {
-        //     if (death_logic(content, philo, &is_all_finish))
-        //         return (NULL);
-        //    philo = philo->next;
-        // }
-        // if (content->number_of_meals != -1 && is_all_finish)
-        // {
-        //     pthread_mutex_lock(&content->dead);
-        //     content->is_die = 1;
-        //     pthread_mutex_unlock(&content->dead);
-        //     return (NULL);
-        // }
-        printf("monitor is runing for philo (%d)\n", philo->id);
-        usleep(10000);
+        sem_wait(content->last_meal);
+        spended_time = get_time() - content->time_last_meal;
+        sem_post(content->last_meal);
+        if (spended_time > content->time_to_die)
+        {
+            sem_wait(content->print);
+            printf("%ld died\n", get_time() - content->started_time);
+            sem_post(content->print);
+            exit(1);
+        }
+        usleep(1000);
     }
     return (NULL);
 }
 
+void prepare(t_container *content, int i)
+{
+    content->last_meal_name = ft_strjoin("meal_name_", ft_itoa(i));
+    sem_unlink(content->last_meal_name);
+	content->last_meal = sem_open(content->last_meal_name, O_CREAT, 0644, 1);
+}
+
 int start_philo_action(t_container *content)
 {
-    t_philo *philos;
+    int i;
+    int state;
 
-    philos = content->all_philos;
-    while (philos)
+    i = 0;
+    state = 0;
+    while (i < content->number_of_philos)
     {
-        philos->process = fork();
-        if (philos->process < 0)
-            ;//free and kill
-        if (philos->process == 0)
+        content->pid[i] = fork();
+        if (content->pid[i] < 0)
+            ft_error("fork");
+        if (content->pid[i] == 0)
         {
-            if (pthread_create(&philos->monitor, NULL, check_for_deaths, philos))
-            //     ;// check here too
-            philo_actions(philos);
+            prepare(content, i);
+            content->started_time = get_time();
+            if (pthread_create(&content->monitor, NULL, &check_for_deaths, content) != 0)
+                printf("error\n");
+            pthread_detach(content->monitor);
+            sem_wait(content->dead);
+            content->time_last_meal = get_time();
+            sem_post(content->dead);
+            philo_actions(content, i);
             exit(0);
         }
-        philos = philos->next;
+        i++;
     }
-    philos = content->all_philos;
-    while (philos)
+    i = 0;
+    while (i < content->number_of_meals)
     {
-        waitpid(philos->process, NULL, 0);
-        philos = philos->next;
+        while (waitpid(content->pid[i], &state, -1) > 0)
+        {
+            if (state != 0)
+            {
+                ft_kill(content);
+                break ;
+            }
+        }
+        i++;
     }
+    
     return (0);
 }
