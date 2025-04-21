@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 23:14:55 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:28:24 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,43 +22,20 @@ long get_time()
     return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-int ft_sleep(long time, t_container *content)
+int ft_sleep(long time)
 {
-
     long te;
-    (void)content;
     te = get_time();
     while ((get_time() - te) < time)
         usleep(500);
     return (0);
 }
 
-// int check_and_print(t_philo *philo, char *message)
-// {
-//     sem_wait(philo->content->dead);
-//     if (philo->content->is_die)
-//     {
-//         sem_post(philo->content->dead);
-//         return (0);
-//     }
-//     sem_wait(philo->content->print);
-//     printf("%ld %d %s", get_time() - philo->content->started_time, \
-//     philo->id, message);
-//     sem_post(philo->content->print);
-//     sem_post(philo->content->dead);
-//     return (1);
-// }
 void check_and_print(t_philo *philo, t_container *content, char *message)
 {
     sem_wait(content->print);
     printf("%ld %d %s", get_time() - content->started_time, philo->id, message);
     sem_post(content->print);
-}
-
-void ft_put_forks(t_container *content)
-{
-    sem_post(content->fork);
-    sem_post(content->fork);
 }
 
 void clean_philo(t_philo *philo)
@@ -110,8 +87,6 @@ void clean_res(t_container *content)
             tmp = philo;
             philo = philo->next;
             clean_philo(tmp);
-            free(tmp->last_meal_name);
-            free(tmp->p_meals_name);
             free(tmp);
         }
         content->all_philos = NULL;

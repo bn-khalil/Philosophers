@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:11:59 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 22:50:12 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:34:19 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,28 +65,17 @@ int     is_valid_numbers(char *str, long *p_nb);
 int	    ft_isdigit(int c);
 size_t	ft_strlen(const char *s);
 long	long_ft_atoi(const char *str);
-long    get_time(void);
-void    *check_for_deaths(void *data);
 char	*ft_strjoin(char *s1, char *s2);
-int     ft_sleep(long time, t_container *content);
+int     ft_sleep(long time);
 int     parse_content(t_container *content, char **av);
 void    create_philos(t_container *content);
-int     assign_forks_to_philo(t_container *content);
 char	*ft_itoa(int n);
 int     start_philo_action(t_container *content);
-void    *check_for_deaths(void *data);
 int     philo_actions(t_philo *philo);
 long    get_time();
 void     check_and_print(t_philo *philo, t_container *content, char *message);
 int     ft_wait(t_container *content, t_philo *philo, int flag);
-void    ft_put_forks(t_container *content);
-int     ft_philo_eating(t_philo *philo, t_container *content);
-int     ft_philo_thinking(t_philo *philo, t_container *content);
-int     ft_philo_die(t_container *content);
-int     ft_take_forks(t_philo *philo, t_container *content);
-int     ft_philo_sleeping(t_philo *philo, t_container *content);
 void    clean_res(t_container *content);
-void    ft_kill(t_container *content);
 void    clean_philo(t_philo *philo);
 
 #endif
