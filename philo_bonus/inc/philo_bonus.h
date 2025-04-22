@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:11:59 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/21 13:34:19 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 00:09:18 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
+    pid_t                monitor_pid;
 }                   t_container;
 
 typedef struct      s_philo
