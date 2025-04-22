@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:00 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/22 14:41:37 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:19:55 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 void *philo_actions(void *data)
 {
-    t_philo *philo;
+    t_philo *philo = (t_philo*)data;
 
-    philo = (t_philo*)data;
     if (philo->id % 2 == 0)
         usleep(500);
     while (1)
     {
         if (ft_philo_die(philo))
-            break ;        
+            break ;
         if (ft_take_forks(philo))
             break ;
         if (ft_philo_eating(philo))
@@ -34,6 +33,7 @@ void *philo_actions(void *data)
     }
     return (NULL);
 }
+
 
 void *action_one(void *data)
 {
@@ -75,7 +75,8 @@ int death_logic(t_container *content, t_philo *philo, int *is_all_finish)
         pthread_mutex_lock(&content->dead);
         if (!content->is_die || !content->all_finish)
         {
-            (1) && (pthread_mutex_lock(&content->print), content->is_die = 1);
+            pthread_mutex_lock(&content->print);
+            content->is_die = 1;
             printf("%ld %d died\n", get_time() - content->started_time\
             , philo->id);
             pthread_mutex_unlock(&content->print);
@@ -111,7 +112,7 @@ void *check_for_deaths(void *data)
             pthread_mutex_unlock(&content->dead);
             return (NULL);
         }
-        usleep(500);
+        usleep(1000);
     }
     return (NULL);
 }

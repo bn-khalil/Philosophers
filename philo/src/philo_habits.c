@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 11:32:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/17 14:05:03 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:19:36 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,21 +74,20 @@ int ft_take_forks(t_philo *philo)
     pthread_mutex_t *first_fork;
     pthread_mutex_t *second_fork;
 
-    if (philo->left_fork->fork_id < philo->right_fork->fork_id)
-    {
-        first_fork = &philo->left_fork->fork;
-        second_fork = &philo->right_fork->fork;
-    }
-    else
-    {
-        second_fork = &philo->left_fork->fork;
-        first_fork = &philo->right_fork->fork;  
-    }
+    first_fork = &philo->left_fork->fork;
+    second_fork = &philo->right_fork->fork;
     pthread_mutex_lock(first_fork);
     if (!check_and_print(philo, "has taken a fork\n"))
-        return (pthread_mutex_unlock(first_fork), 1);
+    {
+        pthread_mutex_unlock(first_fork);
+        return (1);
+    }
     pthread_mutex_lock(second_fork);
     if (!check_and_print(philo, "has taken a fork\n"))
-        return (ft_put_forks(philo), 1);
+    {
+        pthread_mutex_unlock(first_fork);
+        pthread_mutex_unlock(second_fork);
+        return (1);
+    }
     return (0);
 }
