@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/17 10:10:45 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:42:38 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,8 @@ int  is_argument_has_number(char *str)
     return (0);
 }
 
-int is_valid_numbers(char *str, long *p_nb)
+int get_number(char *str, long *p_nb)
 {
-    if (!str || str[0] == '\0')
-    {
-        ft_error("Number of philosophers not valid!");
-        return (1);
-    }
-    if (is_argument_has_number(str))
-        return (1);
-    if (ft_strlen(str) > 10)
-    {
-        ft_error("Arguments number is more that int max");
-        return (1);
-    }
     *p_nb = long_ft_atoi(str);
     if (*p_nb == 0)
     {
@@ -72,26 +60,27 @@ int is_valid_numbers(char *str, long *p_nb)
     return (0);
 }
 
-int  parse_content(t_container *content, char **av)
+int is_valid_numbers(char *str, long *p_nb)
 {
-    long hold_number;
+    if (!str || str[0] == '\0')
+    {
+        ft_error("Number of philosophers not valid!");
+        return (1);
+    }
+    if (is_argument_has_number(str))
+        return (1);
+    if (ft_strlen(str) > 10)
+    {
+        ft_error("Arguments number is more that int max");
+        return (1);
+    }
+    if (get_number(str, p_nb))
+        return (1);
+    return (0);
+}
 
-    hold_number = 0;
-    content->all_forks = NULL;
-    content->all_philos = NULL;
-    content->is_die = 0;
-    if (is_valid_numbers(av[1], &hold_number))
-        return (1);
-    content->number_of_philos = hold_number;
-    if (is_valid_numbers(av[2], &hold_number))
-        return (1);
-    content->time_to_die = hold_number;
-    if (is_valid_numbers(av[3], &hold_number))
-        return (1);
-    content->time_to_eat = hold_number;
-    if (is_valid_numbers(av[4], &hold_number))
-        return (1);
-    content->time_to_sleep = hold_number;
+int rest_parsing(t_container *content, char **av, long hold_number)
+{
     if (pthread_mutex_init(&content->dead, NULL) != 0 \
     || pthread_mutex_init(&content->print, NULL) != 0)
     {
@@ -106,5 +95,26 @@ int  parse_content(t_container *content, char **av)
     }
     else
         content->number_of_meals = -1;
+    return (0);
+}
+int  parse_content(t_container *content, char **av)
+{
+    long hold_number;
+
+    hold_number = 0;
+    if (is_valid_numbers(av[1], &hold_number))
+        return (1);
+    content->number_of_philos = hold_number;
+    if (is_valid_numbers(av[2], &hold_number))
+        return (1);
+    content->time_to_die = hold_number;
+    if (is_valid_numbers(av[3], &hold_number))
+        return (1);
+    content->time_to_eat = hold_number;
+    if (is_valid_numbers(av[4], &hold_number))
+        return (1);
+    content->time_to_sleep = hold_number;
+    if (rest_parsing(content, av, hold_number))
+        return (1);
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 10:19:34 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:42:42 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 long get_time()
 {
     struct timeval tv;
+
     if (gettimeofday(&tv, NULL) == -1)
     {
         ft_error("Error in time");
+        return (-1);
     }
     return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 int ft_sleep(long time, t_container *content)
 {
-
     long te;
 
     te = get_time();
@@ -65,18 +66,25 @@ int ft_wait(t_container *content, t_philo *philo, int flag)
         if (pthread_join(content->thread_monitor, NULL) != 0)
             return (ft_error("Error in join for threads!"), 1);
     }
-    philo = content->all_philos;
-    while (philo)
+    else
     {
-        if (pthread_join(philo->thread, NULL) != 0)
+        if (pthread_join(content->thread_monitor, NULL) != 0)
             return (ft_error("Error in join for threads!"), 1);
-        philo = philo->next;
+        philo = content->all_philos;
+        while (philo)
+        {
+            if (pthread_join(philo->thread, NULL) != 0)
+                return (ft_error("Error in join for threads!"), 1);
+            philo = philo->next;
+        }
     }
     return (0);  
 }
 
 void ft_put_forks(t_philo *philo)
 {
+    if (!philo || !philo->left_fork || !philo->right_fork)
+        return ;
     pthread_mutex_unlock(&philo->left_fork->fork);
     pthread_mutex_unlock(&philo->right_fork->fork);
 }

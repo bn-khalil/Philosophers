@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:35:21 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 10:19:55 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:24:34 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <limits.h>
 # include <sys/time.h>
+# include <string.h>
 
 typedef struct      s_fork
 {
@@ -38,6 +39,7 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
+    int             all_finish;
     pthread_mutex_t dead;
     pthread_mutex_t print;
     pthread_t       thread_monitor;

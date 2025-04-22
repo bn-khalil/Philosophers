@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/18 12:39:20 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:40:39 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void ft_free_philos(t_philo *philo)
     while (current)
     {
         next = current->next;
-		pthread_mutex_destroy(&philo->p_meals);
-		pthread_mutex_destroy(&philo->last_meal);
+		pthread_mutex_destroy(&current->p_meals);
+		pthread_mutex_destroy(&current->last_meal);
         free(current);
         current = next;
     }
@@ -76,14 +76,15 @@ int main(int ac, char **av)
 {
     t_container content;
 
-    // atexit(f);
     if (ac < 5 || ac > 6)
     {
         ft_error("Invalid number of arguments!");
         return (1);   
     }
+    memset(&content, 0, sizeof(t_container));
     if (argument_parse_init(&content, av))
         return (1);
     ft_free_all(&content);
     return (0);
 }   
+
