@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:09:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 18:52:38 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:41:38 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,23 @@ static void	ft_lstadd_back_fork(t_fork **lst, t_fork *new)
 
 void	create_philos(t_container *content)
 {
-	int	i;
+	int		i;
+	t_philo	*philo;
+	t_fork	*fork;
 
 	if (!content)
 		return ;
 	i = 1;
 	while (i <= content->number_of_philos)
 	{
-		ft_lstadd_back_philo(&content->all_philos, ft_lstnew_philo(i));
-		ft_lstadd_back_fork(&content->all_forks, ft_lstnew_fork(i));
+		philo = ft_lstnew_philo(i);
+		if (!philo)
+			return ;
+		ft_lstadd_back_philo(&content->all_philos, philo);
+		fork = ft_lstnew_fork(i);
+		if (!fork)
+			return ;
+		ft_lstadd_back_fork(&content->all_forks, fork);
 		i++;
 	}
 }
