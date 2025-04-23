@@ -6,41 +6,63 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/21 13:27:45 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:55:12 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo_bonus.h"
 
-int  argument_parse_init(t_container *content, char **av)
+int	ft_isdigit(int c)
 {
-    if (!content)
-        return (1);
-    if (parse_content(content, av))
-        return (1);
-    create_philos(content);
-    if (!content->all_philos)
-        return (1);
-    if (start_philo_action(content))
-        return (1);
-    return (0);
+	if (c >= 48 && c <= 57)
+		return (1);
+	return (0);
 }
 
-int main(int ac, char **av)
+size_t	ft_strlen(const char *s)
 {
-    t_container content;
+	size_t	i;
 
-    if (ac < 5 || ac > 6)
-    {
-        ft_error("Invalid number of arguments!");
-        return (1);   
-    }
-    memset(&content, 0, sizeof(t_container));
-    if (argument_parse_init(&content, av))
-    {
-        clean_res(&content);
-        return (1);
-    }
-    clean_res(&content);
-    return (0);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+void	ft_error(char *err)
+{
+	printf("%s\n", err);
+}
+
+static int	argument_parse_init(t_container *content, char **av)
+{
+	if (!content)
+		return (1);
+	if (parse_content(content, av))
+		return (1);
+	create_philos(content);
+	if (!content->all_philos)
+		return (1);
+	if (start_philo_action(content))
+		return (1);
+	return (0);
+}
+
+int	main(int ac, char **av)
+{
+	t_container	content;
+
+	if (ac < 5 || ac > 6)
+	{
+		ft_error("Invalid number of arguments!");
+		return (1);
+	}
+	memset(&content, 0, sizeof(t_container));
+	if (argument_parse_init(&content, av))
+	{
+		clean_res(&content);
+		return (1);
+	}
+	clean_res(&content);
+	return (0);
 }

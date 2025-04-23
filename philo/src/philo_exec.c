@@ -6,13 +6,13 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:00 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/22 20:17:44 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:42:40 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	*philo_actions(void *data)
+static void	*philo_actions(void *data)
 {
 	t_philo	*philo;
 
@@ -35,23 +35,7 @@ void	*philo_actions(void *data)
 	return (NULL);
 }
 
-void	*action_one(void *data)
-{
-	t_container	*content;
-
-	content = (t_container *)data;
-	printf("%ld %d has taken left fork\n", get_time() - \
-		content->started_time, content->all_philos->id);
-	ft_sleep(content->time_to_die, content);
-	pthread_mutex_lock(&content->dead);
-	content->is_die = 1;
-	printf("%ld %d died\n", get_time() - content->started_time, \
-		content->all_philos->id);
-	pthread_mutex_unlock(&content->dead);
-	return (NULL);
-}
-
-void	only_one_phlio(t_container *content)
+static void	only_one_phlio(t_container *content)
 {
 	pthread_t	thread;
 
@@ -61,35 +45,35 @@ void	only_one_phlio(t_container *content)
 		ft_error("Error in join!");
 }
 
-int death_logic(t_container *content, t_philo *philo, int *is_all_finish)
-{    
-    pthread_mutex_lock(&philo->p_meals);
-    if (content->number_of_meals != -1 && philo->meals < content->number_of_meals)
-        (*is_all_finish) = 0;
-    pthread_mutex_unlock(&philo->p_meals);
-    if (content->all_finish)
-        return (0);
-    pthread_mutex_lock(&philo->last_meal);
-    if (get_time() - philo->time_last_meal > philo->content->time_to_die)
-    {
-        pthread_mutex_lock(&content->dead);
-        if (!content->is_die)
-        {
-            pthread_mutex_lock(&content->print);
-            content->is_die = 1;
-            printf("%ld %d died\n", get_time() - content->started_time\
-            , philo->id);
-            pthread_mutex_unlock(&content->print);
-        }
-        pthread_mutex_unlock(&content->dead);
-        pthread_mutex_unlock(&philo->last_meal);
-        return (1);
-    }
-    pthread_mutex_unlock(&philo->last_meal);
-    return (0);
+static int	death_logic(t_container *content, t_philo \
+*philo, int *is_all_finish)
+{
+	pthread_mutex_lock(&philo->p_meals);
+	if (content->number_of_meals != -1 && philo->meals \
+		< content->number_of_meals)
+		(*is_all_finish) = 0;
+	pthread_mutex_unlock(&philo->p_meals);
+	if (content->all_finish)
+		return (0);
+	pthread_mutex_lock(&philo->last_meal);
+	if (get_time() - philo->time_last_meal > philo->content->time_to_die)
+	{
+		pthread_mutex_lock(&content->dead);
+		if (!content->is_die || !content->all_finish)
+		{
+			pthread_mutex_lock(&content->print);
+			content->is_die = 1;
+			printf("%ld %d died\n", get_time() - content->started_time \
+				, philo->id);
+			pthread_mutex_unlock(&content->print);
+		}
+		pthread_mutex_unlock(&content->dead);
+		return (pthread_mutex_unlock(&philo->last_meal), 1);
+	}
+	return (pthread_mutex_unlock(&philo->last_meal), 0);
 }
 
-void	*check_for_deaths(void *data)
+static void	*check_for_deaths(void *data)
 {
 	t_container	*content;
 	t_philo		*philo;
@@ -117,7 +101,6 @@ void	*check_for_deaths(void *data)
 	}
 	return (NULL);
 }
-
 
 int	start_actions(t_container *content)
 {

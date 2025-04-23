@@ -6,13 +6,13 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 11:20:27 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:46:39 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	ft_free_philos(t_philo *philo)
+static void	ft_free_philos(t_philo *philo)
 {
 	t_philo	*current;
 	t_philo	*next;
@@ -28,7 +28,7 @@ void	ft_free_philos(t_philo *philo)
 	}
 }
 
-void	ft_free_forks(t_fork *fork)
+static void	ft_free_forks(t_fork *fork)
 {
 	t_fork	*current;
 	t_fork	*next;
@@ -43,7 +43,7 @@ void	ft_free_forks(t_fork *fork)
 	}
 }
 
-void	ft_free_all(t_container *content)
+static void	ft_free_all(t_container *content)
 {
 	if (!content)
 		return ;
@@ -55,7 +55,7 @@ void	ft_free_all(t_container *content)
 	pthread_mutex_destroy(&content->print);
 }
 
-int	argument_parse_init(t_container *content, char **av)
+static int	argument_parse_init(t_container *content, char **av)
 {
 	if (!content)
 		return (1);
@@ -63,18 +63,14 @@ int	argument_parse_init(t_container *content, char **av)
 		return (1);
 	create_philos(content);
 	if (!content->all_forks || !content->all_philos)
-		return (ft_free_all(content), 1);
+		return (1);
 	if (assign_forks_to_philo(content))
-		return (ft_free_all(content), 1);
+		return (1);
 	if (start_actions(content))
-		return (ft_free_all(content), 1);
+		return (1);
 	return (0);
 }
 
-void f()
-{
-	system("leaks philo");
-}
 int	main(int ac, char **av)
 {
 	t_container	content;
@@ -84,7 +80,6 @@ int	main(int ac, char **av)
 		ft_error("Invalid number of arguments!");
 		return (1);
 	}
-	// atexit(f);
 	memset(&content, 0, sizeof(t_container));
 	if (argument_parse_init(&content, av))
 		return (ft_free_all(&content), 1);

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:09 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/17 14:31:59 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:23:01 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,9 @@ char	*ft_strjoin(char *s1, char *s2)
 	str[i] = '\0';
 	free(s1);
 	return (str);
+}
+
+void	ft_error(char *err)
+{
+	printf("%s\n", err);
 }
