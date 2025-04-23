@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:11:59 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 16:01:18 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:28:40 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		ft_isdigit(int c);
 size_t	ft_strlen(const char *s);
 long	long_ft_atoi(const char *str);
 char	*ft_strjoin(char *s1, char *s2);
-int		ft_sleep(long time);
+void	ft_sleep(long time);
 int		parse_content(t_container *content, char **av);
 void	create_philos(t_container *content);
 char	*ft_itoa(int n);

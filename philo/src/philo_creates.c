@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:09:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 15:52:31 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:52:38 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,8 @@ static t_philo	*ft_lstnew_philo(int philo_number)
 	head = malloc(sizeof(t_philo));
 	if (!head)
 		return (NULL);
-	head->meals = 0;
-	head->time_last_meal = 0;
+	memset(head, 0, sizeof(t_philo));
 	head->id = philo_number;
-	head->next = NULL;
-	head->left_fork = NULL;
-	head->right_fork = NULL;
-	head->thread = NULL;
-	head->content = NULL;
 	return (head);
 }
 
@@ -37,8 +31,8 @@ static t_fork	*ft_lstnew_fork(int philo_number)
 	head = malloc(sizeof(t_fork));
 	if (!head)
 		return (NULL);
+	memset(head, 0, sizeof(t_fork));
 	head->fork_id = philo_number;
-	head->next = NULL;
 	return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 13:21:31 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:15:48 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ long	get_time(void)
 {
 	struct timeval	tv;
 
-	if (gettimeofday(&tv, NULL) == -1)
-	{
-		ft_error("Error in time");
-		return (-1);
-	}
+	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
@@ -38,7 +34,7 @@ int	ft_sleep(long time, t_container *content)
 			return (1);
 		}
 		pthread_mutex_unlock(&content->dead);
-		usleep(500);
+		usleep(100);
 	}
 	return (0);
 }

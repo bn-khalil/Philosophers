@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:22:50 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 14:04:03 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:28:12 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@ long	get_time(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-int	ft_sleep(long time)
+void	ft_sleep(long time)
 {
 	long	te;
 
 	te = get_time();
 	while ((get_time() - te) < time)
 		usleep(100);
-	return (0);
 }
 
 void	check_and_print(t_philo *philo, t_container *content, char *message)

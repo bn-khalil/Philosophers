@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:09:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 14:06:58 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:49:35 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_philo	*ft_lstnew_philo(int philo_number)
 	head = malloc(sizeof(t_philo));
 	if (!head)
 		return (NULL);
+	memset(head, 0, sizeof(t_philo));
 	head->id = philo_number;
 	hold = ft_itoa(head->id);
 	head->last_meal_name = ft_strjoin("/last_meal_", hold);
