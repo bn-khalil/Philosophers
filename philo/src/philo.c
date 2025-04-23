@@ -6,45 +6,44 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:12 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/22 14:40:39 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:20:27 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../inc/philo.h"
 
-void ft_free_philos(t_philo *philo)
+void	ft_free_philos(t_philo *philo)
 {
-    t_philo *current;
-    t_philo *next;
+	t_philo	*current;
+	t_philo	*next;
 
 	current = philo;
-    while (current)
-    {
-        next = current->next;
+	while (current)
+	{
+		next = current->next;
 		pthread_mutex_destroy(&current->p_meals);
 		pthread_mutex_destroy(&current->last_meal);
-        free(current);
-        current = next;
-    }
+		free(current);
+		current = next;
+	}
 }
 
-void ft_free_forks(t_fork *fork)
+void	ft_free_forks(t_fork *fork)
 {
-    t_fork *current;
-    t_fork *next;
+	t_fork	*current;
+	t_fork	*next;
 
 	current = fork;
-    while (current)
-    {
-        next = current->next;
+	while (current)
+	{
+		next = current->next;
 		pthread_mutex_destroy(&current->fork);
-        free(current);
-        current = next;
-    }
+		free(current);
+		current = next;
+	}
 }
 
-void ft_free_all(t_container *content)
+void	ft_free_all(t_container *content)
 {
 	if (!content)
 		return ;
@@ -56,35 +55,38 @@ void ft_free_all(t_container *content)
 	pthread_mutex_destroy(&content->print);
 }
 
-int  argument_parse_init(t_container *content, char **av)
+int	argument_parse_init(t_container *content, char **av)
 {
-    if (!content)
-        return (1);
-    if (parse_content(content, av))
-        return (1);
-    create_philos(content);  
-    if (!content->all_forks || !content->all_philos)
-        return (ft_free_all(content), 1);
-    if (assign_forks_to_philo(content))
-        return (ft_free_all(content), 1);
-    if (start_actions(content))
-        return (ft_free_all(content), 1);
-    return (0);
+	if (!content)
+		return (1);
+	if (parse_content(content, av))
+		return (1);
+	create_philos(content);
+	if (!content->all_forks || !content->all_philos)
+		return (ft_free_all(content), 1);
+	if (assign_forks_to_philo(content))
+		return (ft_free_all(content), 1);
+	if (start_actions(content))
+		return (ft_free_all(content), 1);
+	return (0);
 }
 
-int main(int ac, char **av)
+void f()
 {
-    t_container content;
+	system("leaks philo");
+}
+int	main(int ac, char **av)
+{
+	t_container	content;
 
-    if (ac < 5 || ac > 6)
-    {
-        ft_error("Invalid number of arguments!");
-        return (1);   
-    }
-    memset(&content, 0, sizeof(t_container));
-    if (argument_parse_init(&content, av))
-        return (1);
-    ft_free_all(&content);
-    return (0);
-}   
-
+	if (ac < 5 || ac > 6)
+	{
+		ft_error("Invalid number of arguments!");
+		return (1);
+	}
+	// atexit(f);
+	memset(&content, 0, sizeof(t_container));
+	if (argument_parse_init(&content, av))
+		return (ft_free_all(&content), 1);
+	return (ft_free_all(&content), 0);
+}

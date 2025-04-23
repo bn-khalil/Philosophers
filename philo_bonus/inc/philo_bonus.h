@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:11:59 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/23 00:09:18 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:54:34 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define FORKS "/forks"
 # define DEAD "/dead"
 # define PRINT "/print"
+# define STOP "/stop"
 
 typedef struct      s_container
 {
@@ -35,6 +36,7 @@ typedef struct      s_container
     sem_t           *fork;
     sem_t           *dead;
     sem_t           *print;
+    sem_t           *stop;
     int             number_of_meals;
     int             is_die;
     long            number_of_philos;
@@ -42,16 +44,15 @@ typedef struct      s_container
     long            time_to_die;
     long            time_to_sleep;
     long            started_time;
-    pid_t                monitor_pid;
+    pthread_t       monitor;
 }                   t_container;
 
 typedef struct      s_philo
 {
     int             id;
-    pthread_t       monitor;
     pid_t           process;
-    _Atomic int     meals;
-    _Atomic long    time_last_meal;
+    int     meals;
+    long    time_last_meal;
     sem_t           *last_meal;
     char            *last_meal_name;
     sem_t           *p_meals;

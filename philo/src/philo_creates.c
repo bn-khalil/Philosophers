@@ -6,13 +6,13 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:09:51 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/22 11:36:02 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:11:21 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-t_philo *ft_lstnew_philo(int philo_number)
+t_philo	*ft_lstnew_philo(int philo_number)
 {
 	t_philo	*head;
 
@@ -21,23 +21,23 @@ t_philo *ft_lstnew_philo(int philo_number)
 		return (NULL);
 	head->meals = 0;
 	head->time_last_meal = 0;
-    head->id = philo_number;
+	head->id = philo_number;
 	head->next = NULL;
-    head->left_fork = NULL;
-    head->right_fork = NULL;
-    head->thread = NULL;
+	head->left_fork = NULL;
+	head->right_fork = NULL;
+	head->thread = NULL;
 	head->content = NULL;
 	return (head);
 }
 
-t_fork *ft_lstnew_fork(int philo_number)
+t_fork	*ft_lstnew_fork(int philo_number)
 {
 	t_fork	*head;
 
 	head = malloc(sizeof(t_fork));
 	if (!head)
 		return (NULL);
-    head->fork_id   = philo_number;
+	head->fork_id = philo_number;
 	head->next = NULL;
 	return (head);
 }

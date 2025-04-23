@@ -6,7 +6,7 @@
 /*   By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 22:10:07 by kben-tou          #+#    #+#             */
-/*   Updated: 2025/04/20 16:53:22 by kben-tou         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:40:23 by kben-tou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,18 @@ int init_content(t_container *content)
         sem_unlink(DEAD);
         sem_close(content->print);
         sem_unlink(PRINT);
+        return (1);
+    }
+    sem_unlink(STOP);
+    content->stop = sem_open(STOP, O_CREAT, 0644, 1);
+    if (content->fork == SEM_FAILED)
+    {
+        sem_close(content->dead);
+        sem_unlink(DEAD);
+        sem_close(content->print);
+        sem_unlink(PRINT);
+        sem_close(content->fork);
+        sem_unlink(FORKS);
         return (1);
     }
     return (0);

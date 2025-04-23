@@ -6,7 +6,7 @@
 #    By: kben-tou <kben-tou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/15 22:10:16 by kben-tou          #+#    #+#              #
-#    Updated: 2025/04/22 14:18:44 by kben-tou         ###   ########.fr        #
+#    Updated: 2025/04/23 11:20:12 by kben-tou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRC = $(MANDATORY_DIR)philo.c \
 	$(MANDATORY_DIR)philo_tools.c \
 
 OBJS = $(SRC:.c=.o)
-CFLAGS =  -Wall -Wextra -Werror #-fsanitize=thread
+CFLAGS =  -Wall -Wextra -Werror -fsanitize=thread
 all: $(NAME)
 
 %.o: %.c $(HEADER)
